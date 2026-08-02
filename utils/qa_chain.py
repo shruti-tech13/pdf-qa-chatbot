@@ -12,7 +12,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 
-DEFAULT_LLM_REPO = "meta-llama/Llama-3.2-3B-Instruct"
+DEFAULT_LLM_REPO = "meta-llama/Llama-3.2-3B-Instruct:auto"
 
 QA_PROMPT = PromptTemplate(
     template="""You are a helpful assistant answering questions about the
