@@ -10,7 +10,7 @@ from typing import List
 
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain.schema import Document
+from langchain_core.documents import Document
 
 DEFAULT_EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 INDEX_DIR = "faiss_index"
