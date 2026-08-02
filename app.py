@@ -45,7 +45,7 @@ with st.sidebar:
 
     llm_repo = st.text_input(
         "LLM repo id",
-        value="mistralai/Mistral-7B-Instruct-v0.3",
+        value="meta-llama/Llama-3.2-3B-Instruct",
         help="Any Hugging Face Inference Endpoint-compatible chat model",
     )
 
