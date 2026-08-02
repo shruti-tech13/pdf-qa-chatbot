@@ -1,17 +1,18 @@
 """
 qa_chain.py
 -----------
-Wires the FAISS retriever to a Hugging Face LLM through a
+Wires the FAISS retriever to a Hugging Face-hosted chat model (via
+Hugging Face's OpenAI-compatible router) through a
 ConversationalRetrievalChain, giving the chatbot memory of prior
 turns (bonus feature: chat history).
 """
 
-from langchain_huggingface import HuggingFaceEndpoint
+from langchain_openai import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 
-DEFAULT_LLM_REPO = "mistralai/Mistral-7B-Instruct-v0.3"
+DEFAULT_LLM_REPO = "meta-llama/Llama-3.2-3B-Instruct"
 
 QA_PROMPT = PromptTemplate(
     template="""You are a helpful assistant answering questions about the
@@ -30,11 +31,12 @@ Answer:""",
 
 
 def build_llm(hf_api_token: str, repo_id: str = DEFAULT_LLM_REPO, temperature: float = 0.2):
-    return HuggingFaceEndpoint(
-        repo_id=repo_id,
-        huggingfacehub_api_token=hf_api_token,
+    return ChatOpenAI(
+        base_url="https://router.huggingface.co/v1",
+        api_key=hf_api_token,
+        model=repo_id,
         temperature=temperature,
-        max_new_tokens=512,
+        max_tokens=512,
     )
 
 
@@ -42,7 +44,7 @@ def build_qa_chain(vectorstore, hf_api_token: str, repo_id: str = DEFAULT_LLM_RE
     """
     Returns a ConversationalRetrievalChain backed by:
       - FAISS similarity retriever (semantic search, top-4 chunks)
-      - Hugging Face hosted LLM
+      - Hugging Face-hosted chat model (via router)
       - ConversationBufferMemory (multi-turn chat history)
     """
     llm = build_llm(hf_api_token, repo_id)
